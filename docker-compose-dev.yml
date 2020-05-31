@@ -17,22 +17,22 @@ services:
       - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev
       - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
       - SECRET_KEY=my_secret_key
-    # depends_on:
-    #   - users-db
-    # links:
-    #   - users-db
+    depends_on:
+      - users-db
+    links:
+      - users-db
 
 
-  # users-db:
-  #   container_name: users-db
-  #   build:
-  #     context: ./services/users/project/db
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - 5435:5432
-  #   environment:
-  #     - POSTGRES_USER=postgres
-  #     - POSTGRES_PASSWORD=postgres
+  users-db:
+    container_name: users-db
+    build:
+      context: ./services/users/project/db
+      dockerfile: Dockerfile
+    ports:
+      - 5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
 
   nginx:
     container_name: nginx
