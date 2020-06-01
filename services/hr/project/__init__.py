@@ -15,7 +15,7 @@ def create_app(script_info=None):
 
     # register blueprints
     from project.api.hr import hr_blueprint
-    app.register_blueprint(hr_blueprint)
+    app.register_blueprint(hr_blueprint, url_prefix='/hr')
     # from project.api.auth import auth_blueprint
     # app.register_blueprint(auth_blueprint)
 

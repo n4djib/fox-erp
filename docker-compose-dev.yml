@@ -47,8 +47,8 @@ services:
     environment:
       - FLASK_DEBUG=1
       - APP_SETTINGS=project.config.DevelopmentConfig
-      - DATABASE_URL=postgres://postgres:postgres@hr-db:5432/users_dev
-      - DATABASE_TEST_URL=postgres://postgres:postgres@hr-db:5432/users_test
+      - DATABASE_URL=postgres://postgres:postgres@hr-db:5432/hr_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@hr-db:5432/hr_test
       - SECRET_KEY=my_secret_key
     depends_on:
       - hr-db
@@ -66,7 +66,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      
+
 
   nginx:
     container_name: nginx

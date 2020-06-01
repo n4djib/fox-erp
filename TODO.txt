@@ -1,0 +1,3 @@
+
+- use one db server to conserve resources
+    put all databeses in it
