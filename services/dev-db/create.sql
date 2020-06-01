@@ -1,0 +1,11 @@
+CREATE DATABASE hr_prod;
+CREATE DATABASE hr_dev;
+CREATE DATABASE hr_test;
+
+CREATE DATABASE shared_prod;
+CREATE DATABASE shared_dev;
+CREATE DATABASE shared_test;
+
+CREATE DATABASE users_prod;
+CREATE DATABASE users_dev;
+CREATE DATABASE users_test;

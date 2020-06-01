@@ -2,6 +2,18 @@ version: '3.4'
 
 services:
 
+  dev-db:
+    container_name: dev-db
+    build:
+      context: ./services/dev-db
+      dockerfile: Dockerfile
+    ports:
+      - 5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+
   users:
     container_name: users
     build:
@@ -14,25 +26,29 @@ services:
     environment:
       - FLASK_DEBUG=1
       - APP_SETTINGS=project.config.DevelopmentConfig
-      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev
-      - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
+      # - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev
+      # - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
+      - DATABASE_URL=postgres://postgres:postgres@dev-db:5432/users_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@dev-db:5432/users_test
       - SECRET_KEY=my_secret_key
     depends_on:
-      - users-db
+      # - users-db
+      - dev-db
     links:
-      - users-db
+      # - users-db
+      - dev-db
 
 
-  users-db:
-    container_name: users-db
-    build:
-      context: ./services/users/project/db
-      dockerfile: Dockerfile
-    ports:
-      - 5432
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+  # users-db:
+  #   container_name: users-db
+  #   build:
+  #     context: ./services/users/project/db
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 5432
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=postgres
 
 
   hr:
@@ -47,25 +63,66 @@ services:
     environment:
       - FLASK_DEBUG=1
       - APP_SETTINGS=project.config.DevelopmentConfig
-      - DATABASE_URL=postgres://postgres:postgres@hr-db:5432/hr_dev
-      - DATABASE_TEST_URL=postgres://postgres:postgres@hr-db:5432/hr_test
+      # - DATABASE_URL=postgres://postgres:postgres@hr-db:5432/hr_dev
+      # - DATABASE_TEST_URL=postgres://postgres:postgres@hr-db:5432/hr_test
+      - DATABASE_URL=postgres://postgres:postgres@dev-db:5432/hr_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@dev-db:5432/hr_test
       - SECRET_KEY=my_secret_key
     depends_on:
-      - hr-db
+      # - hr-db
+      - dev-db
     links:
-      - hr-db
+      # - hr-db
+      - dev-db
 
 
-  hr-db:
-    container_name: hr-db
+  # hr-db:
+  #   container_name: hr-db
+  #   build:
+  #     context: ./services/hr/project/db
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 5432
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=postgres
+
+
+  shared:
+    container_name: shared
     build:
-      context: ./services/hr/project/db
-      dockerfile: Dockerfile
+      context: ./services/shared
+      dockerfile: Dockerfile-dev
+    volumes:
+      - './services/shared:/usr/src/app'
     ports:
-      - 5432
+      - 5000
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - FLASK_DEBUG=1
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      # - DATABASE_URL=postgres://postgres:postgres@shared-db:5432/shared_dev
+      # - DATABASE_TEST_URL=postgres://postgres:postgres@hr-db:5432/shared_test
+      - DATABASE_URL=postgres://postgres:postgres@dev-db:5432/shared_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@dev-db:5432/shared_test
+      - SECRET_KEY=my_secret_key
+    depends_on:
+      # - shared-db
+      - dev-db
+    links:
+      # - shared-db
+      - dev-db
+
+
+  # shared-db:
+  #   container_name: shared-db
+  #   build:
+  #     context: ./services/shared/project/db
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 5432
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=postgres
 
 
   nginx:
@@ -78,4 +135,13 @@ services:
       - 80:80
     depends_on:
       - users
-      # - client
+      - hr
+      - shared
+
+
+  # email:
+  # registry:
+  # management:
+  # accounting:
+  # immo
+  # 
