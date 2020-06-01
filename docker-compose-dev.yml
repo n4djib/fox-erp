@@ -34,6 +34,40 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
+
+  hr:
+    container_name: hr
+    build:
+      context: ./services/hr
+      dockerfile: Dockerfile-dev
+    volumes:
+      - './services/hr:/usr/src/app'
+    ports:
+      - 5000
+    environment:
+      - FLASK_DEBUG=1
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - DATABASE_URL=postgres://postgres:postgres@hr-db:5432/users_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@hr-db:5432/users_test
+      - SECRET_KEY=my_secret_key
+    depends_on:
+      - hr-db
+    links:
+      - hr-db
+
+
+  hr-db:
+    container_name: hr-db
+    build:
+      context: ./services/hr/project/db
+      dockerfile: Dockerfile
+    ports:
+      - 5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      
+
   nginx:
     container_name: nginx
     build:

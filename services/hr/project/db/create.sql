@@ -1,0 +1,3 @@
+CREATE DATABASE hr_prod;
+CREATE DATABASE hr_dev;
+CREATE DATABASE hr_test;
